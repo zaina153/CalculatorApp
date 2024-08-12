@@ -1,31 +1,41 @@
 import streamlit as st
+from add import add
+from subtract import subtract
+from multiply import multiply
+from divide import divide
 
-# Title of the app
-st.title('Simple Calculator')
+# Define the main function
+def main():
+    st.title("Simple Calculator")
 
-# Input fields for numbers
-num1 = st.number_input('Enter the first number', value=0)
-num2 = st.number_input('Enter the second number', value=0)
+    # Create a selectbox for operation choice
+    operation = st.selectbox("Select operation:", ["Add", "Subtract", "Multiply", "Divide"])
 
-# Dropdown menu for operations
-operation = st.selectbox('Choose an operation', ['Add', 'Subtract', 'Multiply', 'Divide'])
+    # Create input fields for numbers
+    num1 = st.number_input("Enter first number:", format="%.2f")
+    num2 = st.number_input("Enter second number:", format="%.2f")
 
-# Function to perform calculation
-def calculate(num1, num2, operation):
-    if operation == 'Add':
-        return num1 + num2
-    elif operation == 'Subtract':
-        return num1 - num2
-    elif operation == 'Multiply':
-        return num1 * num2
-    elif operation == 'Divide':
-        if num2 != 0:
-            return num1 / num2
-        else:
-            return 'Error: Division by zero'
+    if st.button("Calculate"):
+        if operation == "Add":
+            result = add(num1, num2)
+            operation_symbol = "+"
+        elif operation == "Subtract":
+            result = subtract(num1, num2)
+            operation_symbol = "-"
+        elif operation == "Multiply":
+            result = multiply(num1, num2)
+            operation_symbol = "*"
+        elif operation == "Divide":
+            try:
+                result = divide(num1, num2)
+                operation_symbol = "/"
+            except ValueError as e:
+                st.error(f"Error: {e}")
+                result = None
 
-# Calculate result
-result = calculate(num1, num2, operation)
+        if result is not None:
+            st.write(f"{num1} {operation_symbol} {num2} = {result}")
 
-# Display the result
-st.write(f'The result of {operation.lower()}ing {num1} and {num2} is {result}')
+# Run the main function
+if __name__ == "__main__":
+    main()
